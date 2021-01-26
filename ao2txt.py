@@ -2,15 +2,22 @@ import sys
 import zipfile
 import re
 
+
 """
 extract text from a zip file
 """
 def zip2ruby(fname):
     with zipfile.ZipFile(fname, 'r') as zf:
+        # zipファイルの中身を取得
+        lst = zf.namelist()
+        print(lst)
+        
+        # zipファイル内のファイルを指定
         item = zf.infolist()[0]
+
         with zf.open(item.filename) as f:
-            # テキストの文字コードのutf-8でデコード
-            return f.read().decode('utf-8')
+            # テキストの文字コードのshift-jisでデコード
+            return f.read().decode('shift_jis')
 
 """
 remove ruby and other symbols
@@ -45,7 +52,7 @@ def main():
     txt = ruby2txt(ruby)
     
     # decide file name
-    textFile = '../ao2txt/' + argvs[2] + '.txt'
+    textFile = '../ao2txt/' + argvs[2]
     
     with open(textFile, 'w', encoding='utf-8') as f:
         f.write(txt)
