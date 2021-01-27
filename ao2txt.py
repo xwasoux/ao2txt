@@ -2,7 +2,6 @@ import sys
 import zipfile
 import re
 
-
 """
 extract text from a zip file
 """
@@ -51,7 +50,7 @@ def main():
     ruby = zip2ruby(argvs[1])
     txt = ruby2txt(ruby)
     
-    # decide file name
+    # 出力ファイルのパス
     textFile = '../ao2txt/' + argvs[2]
     
     with open(textFile, 'w', encoding='utf-8') as f:
