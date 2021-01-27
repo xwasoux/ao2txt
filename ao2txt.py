@@ -1,12 +1,26 @@
 import sys
 import zipfile
 import re
+import urllib.request
+import os.path, glob
 
 """
 extract text from a zip file
 """
-def zip2ruby(fname):
-    with zipfile.ZipFile(fname, 'r') as zf:
+def zip2ruby(url):
+    # urlからデータをDL
+    zip_file = re.split(r'/', url)[-1]
+
+    if not os.path.exists(zip_file):
+        print("Download URL")
+        print("URL: ", url)
+        urllib.request.urlretrieve(url, zip_file)
+    else:
+        print("通知: ダウンロードファイルは既に存在しています")
+        print("file: ", zipfile)
+
+    # zipファイルの展開
+    with zipfile.ZipFile(zip_file, 'r') as zf:
         # zipファイルの中身を取得
         lst = zf.namelist()
         print(lst)
@@ -16,7 +30,12 @@ def zip2ruby(fname):
 
         with zf.open(item.filename) as f:
             # テキストの文字コードのshift-jisでデコード
-            return f.read().decode('shift_jis')
+            text = f.read().decode('shift_jis')
+    
+    # zipファイルを削除
+    os.remove(zip_file)
+
+    return text
 
 """
 remove ruby and other symbols
@@ -33,7 +52,9 @@ def ruby2txt(ruby):
  
     # 改行コードを除くいくつかのスペース（例えば全角スペース、半角スペース、タブ）をまとめて削除
     txt = re.sub(r"[\u3000 \t]", "", txt)
-
+    
+    # 
+    #txt = re.sub()
     # テキスト前後の空白を除去
     return txt.strip()
 
@@ -42,12 +63,13 @@ main function
 """
 def main():
     # zipファイルパスを引数として渡す
+    # [0] -> ao2txt.py | [1] -> url | [2] -> output file.txt
     argvs = sys.argv
     if len(argvs) != 3:
-        print('Usage: python3 {} "zip file path"'.format(argvs[0]))
+        print('Usage: python3 {} "zip file path"'.format(argvs[0])) # argvs[0] => ao2txt.py
         exit()
- 
-    ruby = zip2ruby(argvs[1])
+     
+    ruby = zip2ruby(argvs[1]) # argvs[1] => url
     txt = ruby2txt(ruby)
     
     # 出力ファイルのパス
