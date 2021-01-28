@@ -75,7 +75,7 @@ def main():
     # 出力ファイルのパス
     textFile = '../ao2txt/' + argvs[2]
     
-    with open(textFile, 'w', encoding='utf-8') as f:
+    with open(textFile, mode='a', encoding='utf-8') as f:
         f.write(txt)
 
     print("done!")
