@@ -16,7 +16,7 @@ def zip2ruby(url):
         print("URL: ", url)
         urllib.request.urlretrieve(url, zip_file)
     else:
-        print("通知: ダウンロードファイルは既に存在しています")
+        print("通知: ダウンロードしたzipファイルは既に存在しています")
         print("file: ", zipfile)
 
     # zipファイルの展開
@@ -62,21 +62,25 @@ def ruby2txt(ruby):
 main function
 """
 def main():
-    # zipファイルパスを引数として渡す
-    # [0] -> ao2txt.py | [1] -> url | [2] -> output file.txt
+    # [0] -> ao2txt.py | [1] -> output text file | [2~] -> input zip files
     argvs = sys.argv
-    if len(argvs) != 3:
-        print('Usage: python3 {} "zip file path"'.format(argvs[0])) # argvs[0] => ao2txt.py
+    if len(argvs) == 2:
+        print('Usage:\npython3 {} [zip file] ...'.format(argvs[0])) # argvs[0] => ao2txt.py
         exit()
-     
-    ruby = zip2ruby(argvs[1]) # argvs[1] => url
-    txt = ruby2txt(ruby)
     
-    # 出力ファイルのパス
-    textFile = '../ao2txt/' + argvs[2]
+    # 出力ファイルのpath
+    textFile = '../ao2txt/' + argvs[1]
     
-    with open(textFile, mode='a', encoding='utf-8') as f:
-        f.write(txt)
+    # zipファイルをコマンドライン引数から渡して展開し，テキストデータとして取り出す
+    i = 2
+    for i in range(len(argvs)): 
+        if i >= 2:
+            ruby = zip2ruby(argvs[i]) # argvs[i] => url, i >= 2
+            txt = ruby2txt(ruby)
+    
+            # 出力ファイルにテキストデータを書き込む
+            with open(textFile, mode='a', encoding='utf-8') as f:
+                f.write(txt)
 
     print("done!")
  
