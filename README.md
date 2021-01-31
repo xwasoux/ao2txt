@@ -7,5 +7,7 @@
 ## URLからzipファイルを取得しテキストデータを抽出する
 以下のコマンドを実行することにより，zipファイルをDLすることなく本文のみ(ルビ除く)を抽出したテキストファイルを生成することができる．
 ```
-$ python3 ao2txt.py https://www.aozora.gr.jp/cards/0012345/files/123_ruby_45678.zip output.txt
+$ git clone https://github.com/xwasoux/ao2txt.git
+$ cd ao2txt/
+$ python3 ao2txt.py output.txt https://www.aozora.gr.jp/cards/001518/files/51732_ruby_44617.zip https://www.aozora.gr.jp/cards/001518/files/51731_ruby_50520.zip
 ```
