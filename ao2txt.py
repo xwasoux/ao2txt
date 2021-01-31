@@ -10,20 +10,20 @@ extract text from a zip file
 def zip2ruby(url):
     # urlからデータをDL
     zip_file = re.split(r'/', url)[-1]
-
+    
+    # zipファイルの存在を確認
     if not os.path.exists(zip_file):
-        print("Download URL")
-        print("URL: ", url)
+        print("Download zipfile: ", url)
         urllib.request.urlretrieve(url, zip_file)
     else:
-        print("通知: ダウンロードしたzipファイルは既に存在しています")
+        print("注意: ダウンロードしたzipファイルは既に存在しています")
         print("file: ", zipfile)
 
     # zipファイルの展開
     with zipfile.ZipFile(zip_file, 'r') as zf:
         # zipファイルの中身を取得
         lst = zf.namelist()
-        print(lst)
+        print("zipfile list: " + str(lst))
         
         # zipファイル内のファイルを指定
         item = zf.infolist()[0]
@@ -41,7 +41,7 @@ def zip2ruby(url):
 remove ruby and other symbols
 """
 def ruby2txt(ruby):
-   # テキスト上部の【テキスト中に現れる記号について】箇所の除去
+    # テキスト上部の【テキスト中に現れる記号について】箇所の除去
     txt = re.split(r'-{50,}', ruby)[2]
  
     # テキスト下部の「底本：～」の除去
@@ -55,6 +55,7 @@ def ruby2txt(ruby):
     
     # 
     #txt = re.sub()
+    
     # テキスト前後の空白を除去
     return txt.strip()
 
@@ -68,21 +69,25 @@ def main():
         print('Usage:\npython3 {} [zip file] ...'.format(argvs[0])) # argvs[0] => ao2txt.py
         exit()
     
+    print("zipファイル数:" + str(len(argvs)-2))
+
     # 出力ファイルのpath
     textFile = '../ao2txt/' + argvs[1]
     
     # zipファイルをコマンドライン引数から渡して展開し，テキストデータとして取り出す
-    i = 2
     for i in range(len(argvs)): 
         if i >= 2:
+            print("- - - - - - - - - - - - - - ")
+            print("抽出中" + str(i-1) + '/' + str(len(argvs)-2))
+
             ruby = zip2ruby(argvs[i]) # argvs[i] => url, i >= 2
             txt = ruby2txt(ruby)
     
             # 出力ファイルにテキストデータを書き込む
             with open(textFile, mode='a', encoding='utf-8') as f:
                 f.write(txt)
+    print("- - - - - - - - - - - - - - ")
+    print("抽出完了!==>{}".format(textFile))
 
-    print("done!")
- 
 if __name__ == '__main__':
     main()
